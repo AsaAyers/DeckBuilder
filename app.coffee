@@ -24,6 +24,13 @@ app.use express.logger("dev")
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser("your secret here")
+
+# http://stackoverflow.com/a/13049549/35247
+app.use express.cookieSession
+    secret: 'Some super secret'
+    cookie:
+        maxAge: 60 * 60 * 1000
+
 app.use express.session({secret: "foo"})
 app.use passport.initialize()
 app.use passport.session()
