@@ -24,7 +24,7 @@ app.use express.logger("dev")
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser("your secret here")
-app.use express.session()
+app.use express.session({secret: "foo"})
 app.use passport.initialize()
 app.use passport.session()
 app.use app.router

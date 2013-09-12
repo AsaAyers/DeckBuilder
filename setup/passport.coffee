@@ -1,19 +1,38 @@
 passport = require 'passport'
 GoogleStrategy = require('passport-google').Strategy
+Bookshelf = require 'bookshelf'
+
+Bookshelf.Initialize
+    client: 'mysql',
+    connection:
+        host     : 'localhost',
+        user     : 'root',
+        database : 'deck',
+        charset  : 'utf8'
+
+
+User = Bookshelf.Model.extend
+    tableName: 'users'
+
+Users = Bookshelf.Collection.extend
+    model: User
+
+console.log User::idAttribute
+
 
 
 module.exports = (app) ->
-    users = {}
     passport.serializeUser (user, done) ->
-        user.id ?= Math.random()
-        users[user.id] = user
-        done null, user.id
+        user.save().then ->
+            done null, user.id
 
     passport.deserializeUser (id, done) ->
-        if users[id]?
-            done null, users[id]
-        else
-            done "user not found"
+        console.log 'deserialize', id
+        (new User { id: id }).fetch().then (user) ->
+            if user?
+                done null, user
+            else
+                done "user not found"
 
     # Redirect the user to Google for authentication.  When complete, Google
     # will redirect the user back to the application at
@@ -35,8 +54,15 @@ module.exports = (app) ->
         realm: "http://localhost:3000/"
     , (identifier, profile, done) ->
         console.log identifier, profile
-        user =
-            openId: identifier
-        done null, user
+
+        { name: { familyName: last, givenName: first } } = profile
+
+        (new User { open_id: identifier })
+            .fetch().then (user) ->
+                user ?= new User
+                    name: "#{first} #{last}"
+                    open_id: identifier
+                user.save().then ->
+                    done null, user
     )
 
