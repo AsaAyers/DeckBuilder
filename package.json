@@ -10,6 +10,10 @@
     "jade": "*",
     "less-middleware": "*",
     "tutor": "~0.4.0",
-    "bookshelf": "~0.3.1"
+    "bookshelf": "~0.3.1",
+    "passport": "~0.1.17",
+    "passport-google": "~0.3.0",
+    "hbs": "~2.3.1",
+    "mysql": "~2.0.0-alpha9"
   }
 }
