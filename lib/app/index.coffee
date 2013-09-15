@@ -16,7 +16,6 @@ app.use express.errorHandler()  if "development" is app.get("env")
 
 
 app.get "/", (req, res) ->
-    console.log 'userX', req.user
     res.render 'index',
         user: req.user.toJSON()
 

@@ -9,6 +9,8 @@ app = express()
 passport = require 'passport'
 setupPassport = require './setup/passport'
 hbs = require('hbs')
+browserify = require('browserify-middleware')
+
 
 # all environments
 app.set "port", process.env.PORT or 3000
@@ -35,6 +37,14 @@ app.use express.session({secret: "foo"})
 app.use passport.initialize()
 app.use passport.session()
 app.use app.router
+
+browserify.settings('grep', /\.coffee$|\.js$/)
+
+browserify_options =
+    transform: [ 'coffeeify', 'debowerify' ]
+
+jsPath = path.join(__dirname, "public", "javascripts")
+app.use '/js', browserify(jsPath, browserify_options)
 app.use require("less-middleware")(src: __dirname + "/public")
 app.use express.static(path.join(__dirname, "public"))
 

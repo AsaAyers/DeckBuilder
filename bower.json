@@ -1,0 +1,15 @@
+{
+  "name": "deck",
+  "version": "0.0.0",
+  "authors": [
+    "Asa Ayers <Asa@Courseload.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "marionette": "~1.1.0",
+    "backbone": "~1.0.0",
+    "underscore": "~1.5.2",
+    "jquery": "~2.0.3"
+  }
+}
