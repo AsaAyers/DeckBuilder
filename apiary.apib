@@ -1,0 +1,195 @@
+HOST: http://deckbuilder.asaayers.com:5000/api/
+
+--- DeckBuilder ---
+
+---
+JSON-HAL
+--------
+
+This API is based on [JSON-HAL][site].
+
+According to the [spec][spec-forms] forms have been intentionally left out
+> Omitting forms from HAL was an intentional design decision that was
+> made to keep it focused on linking for APIs.  HAL is therefore a good
+> candidate for use as a base media type on which to build more complex
+> capabilities.  An additional media type is planned for the future
+> which will add form-like controls on top of HAL.
+
+Media Type
+----------
+
+My `_links` may include a `method`. If no `method` is provided it is assumed to be `GET`.
+While this is not in [JSON-HAL][site] this is inspired by PayPal's [API][PayPal].
+
+I'm including `forms` as a top level attribute similar to `_links` or `_embedded.`
+It MUST have a `link` attribute that points to one of the `_links` in the same resource.
+It MAY have a `fields` attribute specifying the required data fields.
+It MAY also have an `optional_fields` attribute.
+
+[PayPal]: https://developer.paypal.com/webapps/developer/docs/api/#hateoas-links
+[site]: http://stateless.co/hal_specification.html
+[spec-forms]: http://tools.ietf.org/html/draft-kelly-json-hal-05#appendix-B.5
+---
+
+-- Entry Point --
+
+GET /
+< 200
+< Content-Type: application/hal+json
+{
+    "_links": {
+        "self": { "href": "/api" },
+        "new_deck": { "href": "/api/deck", "method": "POST" },
+        "decks": [
+            { "href": "/api/deck/1",  "title": "Goblins" }
+        ],
+        "cards": { "href": "/api/cards" }
+    },
+    "forms": {
+        "new_deck": { "link": "new_deck", "fields": [ "name" ] }
+    },
+    "_embedded": {
+    }
+}
+
+-- Deck Resources --
+
+POST /deck
+{ "name": "Goblins" }
+< 201
+< Content-Type: application/hal+json
+{
+   "_links": {
+        "self": { "href": "/api/deck/1" },
+        "delete": { "href": "/api/deck/1", "method": "DELETE" },
+        "edit": { "href": "/api/deck/1/", "method": "PATCH" },
+        "add_card": { "href": "/api/deck/1/cards", "method": "POST" }
+    },
+    "forms": {
+        "edit": { "link": "edit", "fields": [ "name"] },
+        "add_card": { "link": "add_card", "fields": [ "id", "count"] }
+    },
+    "name": "Goblins",
+    "colors": [ ],
+    "main_cards": 0,
+    "sideboard": 0
+ }
+
+GET /deck/{id}
+< 200
+< Content-Type: application/hal+json
+{
+   "_links": {
+        "self": { "href": "/api/deck/1" },
+        "delete": { "href": "/api/deck/1", "method": "DELETE" },
+        "edit": { "href": "/api/deck/1/", "method": "PATCH" },
+        "add_card": { "href": "/api/deck/1/cards", "method": "POST" }
+    },
+    "forms": {
+        "edit": { "link": "edit", "fields": [ "name"] },
+        "add_card": { "link": "add_card", "fields": [ "id", "count"] }
+    }
+    "_embedded": {
+        "cards": [{
+            "_links": {
+                "self": { "href": "/api/deck/987654/cards/1" },
+                "remove": { "href": "/api/deck/987654/cards/1", "method": "DELETE" },
+                "modify": { "href": "/api/deck/987654/cards/1", "method": "PATCH" },
+                "full_card": { "href": "/api/cards/249684" }
+            },
+            "forms": {
+                "remove": { "link": "remove" },
+                "edit": { "link": "modify", "fields": [ "count" ] }
+            },
+            "name": "Searing Spear",
+            "cost": "{1}{R}",
+            "img_url": "http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=Searing%20Spear",
+            "count": 4,
+            "types": [ "Instant" ]
+        }, {
+            "_links": {
+                "self": { "href": "/api/deck/987654/cards/2" },
+                "remove": { "href": "/api/deck/987654/cards/2", "method": "DELETE" },
+                "modify": { "href": "/api/deck/987654/cards/2", "method": "PATCH" },
+                "full_card": { "href": "/api/cards/278257" }
+            },
+            "forms": {
+                "remove": { "link": "remove" },
+                "edit": { "link": "modify", "fields": [ "count" ] }
+            }
+            "name": "Vexing Devil",
+            "cost": "{R}",
+            "img_url": "http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=Vexing%20Devil",
+            "count": 1,
+            "types": [ "Creature" ]
+        }]
+    }
+    "name": "Goblins",
+    "colors": [ "red" ],
+    "main_cards": 60,
+    "sideboard": 10
+ }
+ 
+-- Card Resources --
+ 
+GET /cards
+< 200
+< Content-Type: application/hal+json
+{
+    "_links": {
+        "self": { "href": "/api/cards" },
+        "by_name": { "href": "/api/cards{?name}", "templated": true },
+        "by_id": { "href": "/api/cards/{id}", "templated": true }
+    }
+}
+
+GET /cards/{id}
+< 200
+< Content-Type: application/hal+json
+{
+    "_links": {
+        "self": { "href": "/api/cards" },
+        "by_name": { "href": "/api/cards{?name}", "templated": true },
+        "by_id": { "href": "/api/cards/{id}", "templated": true }
+    }
+    "id": 249684,
+    "mana_cost": "{1}{R}", 
+    "name": "Searing Spear", 
+    "rarity": "Common", 
+    "rulings": [], 
+    "subtypes": [], 
+    "supertypes": [], 
+    "text": "Searing Spear deals 3 damage to target creature or player.", 
+    "types": [
+        "Instant"
+    ], 
+    "flavor_text": "Sometimes you die a glorious death with your sword held high. Sometimes you're just target practice.", 
+    "converted_mana_cost": 2, 
+    "expansion": "Magic 2013", 
+    "img_url": "http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=Searing%20Spear"
+}
+
+This is an exact match only for now. Tutor doesn't seem to support searching, so I'll
+have to mirror the whole database to get search.
+GET /cards{?name}
+< 200
+< Content-Type: application/hal+json
+{
+    "_embedded": {
+        "cards": [
+            {
+                "_links": {
+                    "self": { "href": "/api/cards/249684" }
+                }
+                "id": 249684,
+                "mana_cost": "{1}{R}", 
+                "name": "Searing Spear", 
+                "text": "Searing Spear deals 3 damage to target creature or player.", 
+                "types": [
+                    "Instant"
+                ], 
+                "img_url": "http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=Searing%20Spear"
+            }
+        ]
+    }
+}
