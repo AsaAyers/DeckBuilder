@@ -11,6 +11,9 @@
     "backbone": "~1.0.0",
     "underscore": "~1.5.2",
     "jquery": "~2.0.3",
-    "q": "~0.9.7"
+    "q": "~0.9.7",
+    "needy": "https://github.com/BlueJeansAndRain/needy.git#~0.1.9",
+    "needy-cache": "https://github.com/AsaAyers/needy-cache.git",
+    "needy-coffee": "https://github.com/AsaAyers/needy-coffee.git"
   }
 }

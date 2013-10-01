@@ -1,3 +1,5 @@
 node_modules
 public/stylesheets/*.css
 public/javascripts
+lib/app/views
+bower_components

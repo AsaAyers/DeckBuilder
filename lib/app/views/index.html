@@ -7,7 +7,23 @@
     <body>
         Hello {{user.name}}
 
-        <script src="/js/application.coffee"></script>
+        <script>
+            window.needy = {
+                root: 'javascripts',
+                prefix: 'bower_components',
+                prerequire: [
+                    'needy-coffee',
+                    'needy-cache'
+                ],
+                core: {
+                    deck: "./deck/",
+                    'coffee-script': './bower_components/coffee-script/extras/coffee-script.js',
+                    "needy-cache": './bower_components/needy-cache/needy-cache.js',
+                    "needy-coffee": './bower_components/needy-coffee/needy-coffee.js'
+                }
+            }
+        </script>
+        <script data-needy="./application.coffee" src="javascripts/bower_components/needy/needy.js"></script>
     </body>
 </html>
 

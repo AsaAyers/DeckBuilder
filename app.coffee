@@ -46,7 +46,12 @@ browserify_options =
 jsPath = path.join(__dirname, "public", "javascripts")
 app.use '/js', browserify(jsPath, browserify_options)
 app.use require("less-middleware")(src: __dirname + "/public")
-app.use express.static(path.join(__dirname, "public"))
+
+staticOptions =
+    index: ".block-indexes-#{Math.random()}"
+app.use express.static(path.join(__dirname, "public"), staticOptions)
+app.use "/javascripts/bower_components",
+    express.static(path.join(__dirname, "bower_components"), staticOptions)
 
 hbs.registerPartials __dirname + "/views/partials"
 setupPassport app
