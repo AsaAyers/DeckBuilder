@@ -3,10 +3,10 @@ Model = require './base_model.coffee'
 
 module.exports =
 class ApiClient extends Model
+    url: '/api/'
 
     # This simplifies the permissions process. The client doesn't care why it
-    # can't create a new deck. Maybe you're viewing someone else's deck? Maybe
-    # a service that creating decks depends on is down? It doesn't matter.
+    # can't create a new deck.
     canCreateDeck: ->
         @validateForm('new_deck', [ 'name' ], [], 'POST')
 
@@ -17,4 +17,5 @@ class ApiClient extends Model
         deck = new Deck { name: name }
 
         { href: href, method: method } = @getForm 'new_deck'
-        deck.save undefined, { url: href, method: method }
+        deck.save(undefined, { url: href, method: method }).then ->
+            deck

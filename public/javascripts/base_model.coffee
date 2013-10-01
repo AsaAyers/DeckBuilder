@@ -2,8 +2,6 @@ Backbone = require 'backbone'
 
 module.exports =
 class Model extends Backbone.Model
-    url: 'http://deckbuilder.apiary.io/api/'
-
     parse: (data) ->
         console.log 'parse', data
         _.defaults data,
@@ -13,6 +11,9 @@ class Model extends Backbone.Model
         @_links = data._links
         @_forms = data.forms
         @_embedded = data._embedded
+
+        if data._links.self?
+            @url = data._links.self.href
 
         delete data._links
         delete data.forms
@@ -28,9 +29,7 @@ class Model extends Backbone.Model
         _.extend f, @getLink(f.link)
 
     getLink: (name) ->
-        l = _.defaults {}, @_links[name], { method: 'GET' }
-        l.href = "http://deckbuilder.apiary.io#{l.href}"
-        l
+        _.defaults {}, @_links[name], { method: 'GET' }
 
     submitForm: (name, fields) ->
         unless @hasForm(name)

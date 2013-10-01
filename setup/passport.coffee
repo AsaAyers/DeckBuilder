@@ -50,8 +50,8 @@ module.exports = (app) ->
     )
 
     passport.use new GoogleStrategy(
-        returnURL: "http://asa.local:3000/auth/google/return"
-        realm: "http://asa.local:3000/"
+        returnURL: "http://deckbuilder.asaayers.com:5000/auth/google/return"
+        realm: "http://deckbuilder.asaayers.com:5000/"
     , (identifier, profile, done) ->
         console.log identifier, profile
 

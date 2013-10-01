@@ -13,7 +13,7 @@ browserify = require('browserify-middleware')
 
 
 # all environments
-app.set "port", process.env.PORT or 3000
+app.set "port", process.env.PORT or 5000
 app.set "views", __dirname + "/views"
 
 # This will use handlebars, but the files end in .html.  This is mostly so vim

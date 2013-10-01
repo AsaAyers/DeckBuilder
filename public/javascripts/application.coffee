@@ -8,8 +8,14 @@ window.Backbone = require 'backbone'
 Backbone.$ = $
 Marionette = require 'marionette'
 
+require './setup/api.coffee'
+require './setup/backbone.coffee'
+
 console.log 'hello world'
 ApiClient = require './api_client.coffee'
 window.api = api = new ApiClient
 api.fetch().done ->
-    api.createDeck("Goblins")
+    api.createDeck("Goblins").done (goblins) ->
+        console.log goblins
+
+        goblins.addCard 11411, 5
